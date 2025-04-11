@@ -121,43 +121,50 @@ def checkIfThereIsAWinner(matrixOfTheGame_):
 
 
 mainUserInput = '0'
-matrixOfTheGame = [[' ', ' ', ' '], [' ', ' ', ' '], [' ', ' ', ' ']]
 
 while mainUserInput != '2':
     printInitialMenu()
     mainUserInput = input('Digite a opção desejada: ')
 
     if mainUserInput == '1':
+        matrixOfTheGame = [[' ', ' ', ' '], [' ', ' ', ' '], [' ', ' ', ' ']]
+
         print('\nJogador 1 = "X" ')
         print('Jogador 2 = "O" ')
 
-        validPosition = False
+        userWantToContinue = 'S'
 
-        while not validPosition:
-            print('É a vez do jogador 1, por favor digite uma posição válida')
-            userOneInputLine = input('Informe o indice da linha: ')
-            userOneInputColumn = input('Informe o indice da coluna: ')
+        while userWantToContinue == 'S' or userWantToContinue == 's':
+            validPosition = False
 
-            validPosition = validateUsersInputPosition(matrixOfTheGame, userOneInputLine, userOneInputColumn)
-            sleep(1)
-            system('cls')
+            while not validPosition:
+                print('É a vez do jogador 1, por favor digite uma posição válida')
+                userOneInputLine = input('Informe o indice da linha: ')
+                userOneInputColumn = input('Informe o indice da coluna: ')
 
-        matrixOfTheGame[int(userOneInputLine)][int(userOneInputColumn)] = 'X'
-        printGame(matrixOfTheGame)
+                validPosition = validateUsersInputPosition(matrixOfTheGame, userOneInputLine, userOneInputColumn)
+                sleep(1)
+                system('cls')
 
-        validPosition = False
+            matrixOfTheGame[int(userOneInputLine)][int(userOneInputColumn)] = 'X'
+            printGame(matrixOfTheGame)
 
-        while not validPosition:
-            print('É a vez do jogador 2, por favor digite uma posição válida')
-            userOneInputLine = input('Informe o indice da linha: ')
-            userOneInputColumn = input('Informe o indice da coluna: ')
+            validPosition = False
 
-            validPosition = validateUsersInputPosition(matrixOfTheGame, userOneInputLine, userOneInputColumn)
-            sleep(1)
-            system('cls')
+            while not validPosition:
+                print('É a vez do jogador 2, por favor digite uma posição válida')
+                userOneInputLine = input('Informe o indice da linha: ')
+                userOneInputColumn = input('Informe o indice da coluna: ')
 
-        matrixOfTheGame[int(userOneInputLine)][int(userOneInputColumn)] = 'O'
-        printGame(matrixOfTheGame)
+                validPosition = validateUsersInputPosition(matrixOfTheGame, userOneInputLine, userOneInputColumn)
+                sleep(1)
+                system('cls')
+
+            matrixOfTheGame[int(userOneInputLine)][int(userOneInputColumn)] = 'O'
+            printGame(matrixOfTheGame)
+
+            userWantToContinue = input('Deseja continuar jogando ou voltar ao menu principal ? (s) para sim e (n) para não: ')
+
 
 # printRulesOfTheGame()
 # print('\n')
