@@ -1,6 +1,7 @@
 
 from os import system
 from time import sleep
+from copy import deepcopy
 
 # testado
 def printGame(listOfGame_):
@@ -69,13 +70,58 @@ def validateUsersInputPosition(matrixOfTheGame_, line, column):
     
     
 # continuar a partir daqui
-def checkIfThereIsAWinner():
+def checkIfThereIsAWinner(matrixOfTheGame_):
+    possibilities = {
+        'lineZero': deepcopy(matrixOfTheGame_[0]),
+        'lineOne': deepcopy(matrixOfTheGame_[1]),
+        'lineTwo': deepcopy(matrixOfTheGame_[2]),
+        'columnZero': list(),
+        'columnOne': list(),
+        'columnTwo': list(),
+        'mainDiagonal': list(),
+        'secondaryDiagonal': list(),
+    }
+
     for numberOfTheLine in range(0, 3):
         for numberOfTheColumn in range(0, 3):
-            ...
+            if numberOfTheLine == numberOfTheColumn:
+                possibilities['mainDiagonal'].append(matrixOfTheGame_[numberOfTheLine][numberOfTheColumn])
+
+            if numberOfTheColumn == (3 - numberOfTheLine - 1):
+                possibilities['secondaryDiagonal'].append(matrixOfTheGame_[numberOfTheLine][numberOfTheColumn])
+
+            if numberOfTheColumn == 0:
+                possibilities['columnZero'].append(matrixOfTheGame_[numberOfTheLine][numberOfTheColumn])
+
+            if numberOfTheColumn == 1:
+                possibilities['columnOne'].append(matrixOfTheGame_[numberOfTheLine][numberOfTheColumn])
+
+            if numberOfTheColumn == 2:
+                possibilities['columnTwo'].append(matrixOfTheGame_[numberOfTheLine][numberOfTheColumn])
+            
+    # Checar se tem alguma lista com simbolos iguais
+    if possibilities['lineZero'].count('X') == 3 or possibilities['lineZero'].count('O') == 3:
+        return possibilities['lineZero']
+    elif possibilities['lineOne'].count('X') == 3 or possibilities['lineOne'].count('O') == 3:
+        return possibilities['lineOne']
+    elif possibilities['lineTwo'].count('X') == 3 or possibilities['lineTwo'].count('O') == 3:
+        return possibilities['lineTwo']
+    elif possibilities['columnZero'].count('X') == 3 or possibilities['columnZero'].count('O') == 3:
+        return possibilities['columnZero']
+    elif possibilities['columnOne'].count('X') == 3 or possibilities['columnOne'].count('O') == 3:
+        return possibilities['columnOne']
+    elif possibilities['columnTwo'].count('X') == 3 or possibilities['columnTwo'].count('O') == 3:
+        return possibilities['columnTwo']
+    elif possibilities['mainDiagonal'].count('X') == 3 or possibilities['mainDiagonal'].count('O') == 3:
+        return possibilities['mainDiagonal'] 
+    elif possibilities['secondaryDiagonal'].count('X') == 3 or possibilities['secondaryDiagonal'].count('O') == 3:
+        return possibilities['secondaryDiagonal']
+    else:
+        return []
+
 
 mainUserInput = '0'
-matrixOfTheGame = [['X', 'O', 'X'], ['O', 'X', 'O'], ['O', 'X', 'X']]
+matrixOfTheGame = [[' ', ' ', ' '], [' ', ' ', ' '], [' ', ' ', ' ']]
 
 while mainUserInput != '2':
     printInitialMenu()
@@ -115,3 +161,5 @@ while mainUserInput != '2':
 
 # printRulesOfTheGame()
 # print('\n')
+
+
