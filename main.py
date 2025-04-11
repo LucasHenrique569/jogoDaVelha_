@@ -26,7 +26,8 @@ def printInitialMenu():
     print('Olá, bem vindo ao jogo da velha !!! ')
     print('Menu de opções: ')
     print('     1: Iniciar novo jogo')
-    print('     2: Sair\n')
+    print('     2: Ver regras do jogo')
+    print('     3: Sair\n')
 
 
 # testado
@@ -69,7 +70,7 @@ def validateUsersInputPosition(matrixOfTheGame_, line, column):
             return False
     
     
-# continuar a partir daqui
+# ainda precisa ser testada
 def checkIfThereIsAWinner(matrixOfTheGame_):
     possibilities = {
         'lineZero': deepcopy(matrixOfTheGame_[0]),
@@ -120,9 +121,20 @@ def checkIfThereIsAWinner(matrixOfTheGame_):
         return []
 
 
+# ainda precisa ser testado
+def printWhichPlayerWonTheGame(listOfGame):
+    
+    # não tem vencedor
+    if listOfGame == []:
+        return ' '
+    elif listOfGame.count('X') == 3: 
+        return 'Jogador 1 venceu'
+    else:
+        return 'Jogador 2 venceu'
+
 mainUserInput = '0'
 
-while mainUserInput != '2':
+while mainUserInput != '3':
     printInitialMenu()
     mainUserInput = input('Digite a opção desejada: ')
 
@@ -149,6 +161,9 @@ while mainUserInput != '2':
             matrixOfTheGame[int(userOneInputLine)][int(userOneInputColumn)] = 'X'
             printGame(matrixOfTheGame)
 
+            possibleWinner = printWhichPlayerWonTheGame(checkIfThereIsAWinner(matrixOfTheGame))
+            print(possibleWinner)
+
             validPosition = False
 
             while not validPosition:
@@ -163,7 +178,15 @@ while mainUserInput != '2':
             matrixOfTheGame[int(userOneInputLine)][int(userOneInputColumn)] = 'O'
             printGame(matrixOfTheGame)
 
+            possibleWinner = printWhichPlayerWonTheGame(checkIfThereIsAWinner(matrixOfTheGame))
+            print(possibleWinner)
+
+            # lidar melhor com a resposta do usuário depois
             userWantToContinue = input('Deseja continuar jogando ou voltar ao menu principal ? (s) para sim e (n) para não: ')
+    elif mainUserInput == '2':
+        printRulesOfTheGame()
+        sleep(4)
+        system('cls')
 
 
 # printRulesOfTheGame()
