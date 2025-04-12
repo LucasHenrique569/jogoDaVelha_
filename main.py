@@ -1,7 +1,7 @@
 
 from os import system
-from time import sleep
 from copy import deepcopy
+from msvcrt import getch
 
 # testado
 def printGame(listOfGame_):
@@ -32,7 +32,7 @@ def printInitialMenu():
 
 # testado
 def printRulesOfTheGame():
-    print('Para posicionar o icone na posição desejada no quadro, informe o indice da linha e da coluna de acordo com a posição na matriz que você deseja inserir o icone, veja a ilustração abaixo: \n')
+    print('\nPara posicionar o icone na posição desejada no quadro, informe o indice da linha e da coluna de acordo com a posição na matriz que você deseja inserir o icone, veja a ilustração abaixo: \n')
     for line in range(0, 3):
         if line == 0:
             print('    ', 0, ' '*3, '1', ' '*3, '2', '  \n')
@@ -47,6 +47,7 @@ def printRulesOfTheGame():
         
         if not line == 2:
             print('\n  ', '_'*17, '\n')
+    print('\n')
 
 
 # testado
@@ -121,16 +122,37 @@ def checkIfThereIsAWinner(matrixOfTheGame_):
         return []
 
 
-# ainda precisa ser testado
-def printWhichPlayerWonTheGame(listOfGame):
+# testado
+def printWhichPlayerWonTheGame(matrixOfTheGame__):
     
     # não tem vencedor
-    if listOfGame == []:
+    if matrixOfTheGame__ == []:
         return ' '
-    elif listOfGame.count('X') == 3: 
-        return 'Jogador 1 venceu'
+    elif matrixOfTheGame__.count('X') == 3: 
+        return '\033[1;32mJogador 1 venceu !!! \033[0m'
     else:
-        return 'Jogador 2 venceu'
+        return '\033[1;32mJogador 2 venceu !!! \033[0m'
+
+# ainda precisa ser testado
+def handleUsersTurn(matrixOfTheGame, whichPlayerSTurnIsIt, playerIcon):
+    validPosition = False
+
+    while not validPosition:
+        print(f'\nÉ a vez do jogador {whichPlayerSTurnIsIt}, por favor digite uma posição válida')
+        userOneInputLine = input('Informe o indice da linha: ')
+        userOneInputColumn = input('Informe o indice da coluna: ')
+
+        validPosition = validateUsersInputPosition(matrixOfTheGame, userOneInputLine, userOneInputColumn)
+
+    matrixOfTheGame[int(userOneInputLine)][int(userOneInputColumn)] = playerIcon
+    printGame(matrixOfTheGame)
+
+# testado
+def cleanScreen():
+    print('\nPressione qualquer tecla para continuar ...')
+    getch()
+    system('cls')
+
 
 mainUserInput = '0'
 
@@ -138,58 +160,51 @@ while mainUserInput != '3':
     printInitialMenu()
     mainUserInput = input('Digite a opção desejada: ')
 
-    if mainUserInput == '1':
-        matrixOfTheGame = [[' ', ' ', ' '], [' ', ' ', ' '], [' ', ' ', ' ']]
+    match mainUserInput:
+        case '1':
+            matrixOfTheGame = [[' ', ' ', ' '], [' ', ' ', ' '], [' ', ' ', ' ']]
 
-        print('\nJogador 1 = "X" ')
-        print('Jogador 2 = "O" ')
+            print('\nJogador 1 = "X" ')
+            print('Jogador 2 = "O" ')
 
-        userWantToContinue = 'S'
+            userWantToContinue = 'S'
 
-        while userWantToContinue == 'S' or userWantToContinue == 's':
-            validPosition = False
+            while userWantToContinue == 'S' or userWantToContinue == 's':
 
-            while not validPosition:
-                print('É a vez do jogador 1, por favor digite uma posição válida')
-                userOneInputLine = input('Informe o indice da linha: ')
-                userOneInputColumn = input('Informe o indice da coluna: ')
+                # É a vez do jogador 1
+                controlsWhichPlayerSTurnItIs = 1
+                handleUsersTurn(matrixOfTheGame, controlsWhichPlayerSTurnItIs, 'X')
 
-                validPosition = validateUsersInputPosition(matrixOfTheGame, userOneInputLine, userOneInputColumn)
-                sleep(1)
-                system('cls')
+                possibleWinner = printWhichPlayerWonTheGame(checkIfThereIsAWinner(matrixOfTheGame))
+                print('\n', possibleWinner)
 
-            matrixOfTheGame[int(userOneInputLine)][int(userOneInputColumn)] = 'X'
-            printGame(matrixOfTheGame)
+                cleanScreen()
 
-            possibleWinner = printWhichPlayerWonTheGame(checkIfThereIsAWinner(matrixOfTheGame))
-            print(possibleWinner)
+                # Sai do loop caso tenha um vencedor
+                if possibleWinner != ' ':
+                    break
+                    
+                # É a vez do jogador 2
+                controlsWhichPlayerSTurnItIs = 2
+                handleUsersTurn(matrixOfTheGame, controlsWhichPlayerSTurnItIs, 'O')
 
-            validPosition = False
+                possibleWinner = printWhichPlayerWonTheGame(checkIfThereIsAWinner(matrixOfTheGame))
+                print('\n', possibleWinner)
 
-            while not validPosition:
-                print('É a vez do jogador 2, por favor digite uma posição válida')
-                userOneInputLine = input('Informe o indice da linha: ')
-                userOneInputColumn = input('Informe o indice da coluna: ')
+                cleanScreen()
 
-                validPosition = validateUsersInputPosition(matrixOfTheGame, userOneInputLine, userOneInputColumn)
-                sleep(1)
-                system('cls')
+                # Sai do loop caso tenha um vencedor
+                if possibleWinner != ' ':
+                    break
 
-            matrixOfTheGame[int(userOneInputLine)][int(userOneInputColumn)] = 'O'
-            printGame(matrixOfTheGame)
+                # lidar melhor com a resposta do usuário depois
+                userWantToContinue = input('Deseja continuar jogando ou voltar ao menu principal ? (s) para sim e qualquer outra tecla para não: ')
+        case '2':
+            printRulesOfTheGame()
+        case '3':
+            print('\nThank you for playing with us. See you next time.')
+        case _:
+            print('\nPlease, write a suitable input.')
 
-            possibleWinner = printWhichPlayerWonTheGame(checkIfThereIsAWinner(matrixOfTheGame))
-            print(possibleWinner)
-
-            # lidar melhor com a resposta do usuário depois
-            userWantToContinue = input('Deseja continuar jogando ou voltar ao menu principal ? (s) para sim e (n) para não: ')
-    elif mainUserInput == '2':
-        printRulesOfTheGame()
-        sleep(4)
-        system('cls')
-
-
-# printRulesOfTheGame()
-# print('\n')
-
+    cleanScreen()
 
