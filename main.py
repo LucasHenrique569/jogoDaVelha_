@@ -4,17 +4,17 @@ from copy import deepcopy
 from msvcrt import getch
 
 # testado
-def printGame(listOfGame_):
+def printGame(matrixOfTheGame):
     print('\n')
-    for index, line in enumerate(listOfGame_):
+    for index, line in enumerate(matrixOfTheGame):
         for index_, item in enumerate(line):
             # consertar essa porqueira depois
             if index_ == 1:
-                print('| ', item, ' |', end='')
+                print('| ', f'\033[1;37m{item}\033[0m', ' |', end='')
             elif index_ == 2:
-                print(' ', item, end='')
+                print(' ', f'\033[1;37m{item}\033[0m', end='')
             else:
-                print('  ', item, ' ', end='')
+                print('  ', f'\033[1;37m{item}\033[0m', ' ', end='')
         
         if not index == 2:
             print('\n', '_'*17, '\n')
@@ -51,7 +51,7 @@ def printRulesOfTheGame():
 
 
 # testado
-def validateUsersInputPosition(matrixOfTheGame_, line, column):
+def validateUsersInputPosition(matrixOfTheGame, line, column):
     convertedLine = line
     convertedColumn = column
 
@@ -61,22 +61,29 @@ def validateUsersInputPosition(matrixOfTheGame_, line, column):
     except ValueError:
         print('Por favor, tente novamente, você informou algo inválido.')
         return False
-    finally:
-        positionIsEmpty = True if matrixOfTheGame_[convertedLine][convertedColumn] == ' ' else False
 
-        if positionIsEmpty:
-            return True
-        else:
-            print('Por favor, tente novamente, você informou as coordenadas de uma posição inválida.')
-            return False
+    thereIsANegativeNumber = True if convertedLine < 0 or convertedColumn < 0 else False
+    thereIsANumberBiggerThan3 = True if convertedLine > 2 or convertedColumn > 2 else False
+
+    if thereIsANegativeNumber or thereIsANumberBiggerThan3:
+        print('Por favor, tente novamente, você informou as coordenadas de uma posição inválida.')
+        return False
+    
+    positionIsEmpty = True if matrixOfTheGame[convertedLine][convertedColumn] == ' ' else False
+
+    if positionIsEmpty:
+        return True
+
+    print('Por favor, tente novamente, você informou as coordenadas de uma posição inválida.')
+    return False
     
     
 # ainda precisa ser testada
-def checkIfThereIsAWinner(matrixOfTheGame_):
+def checkIfThereIsAWinner(matrixOfTheGame):
     possibilities = {
-        'lineZero': deepcopy(matrixOfTheGame_[0]),
-        'lineOne': deepcopy(matrixOfTheGame_[1]),
-        'lineTwo': deepcopy(matrixOfTheGame_[2]),
+        'lineZero': deepcopy(matrixOfTheGame[0]),
+        'lineOne': deepcopy(matrixOfTheGame[1]),
+        'lineTwo': deepcopy(matrixOfTheGame[2]),
         'columnZero': list(),
         'columnOne': list(),
         'columnTwo': list(),
@@ -87,19 +94,19 @@ def checkIfThereIsAWinner(matrixOfTheGame_):
     for numberOfTheLine in range(0, 3):
         for numberOfTheColumn in range(0, 3):
             if numberOfTheLine == numberOfTheColumn:
-                possibilities['mainDiagonal'].append(matrixOfTheGame_[numberOfTheLine][numberOfTheColumn])
+                possibilities['mainDiagonal'].append(matrixOfTheGame[numberOfTheLine][numberOfTheColumn])
 
             if numberOfTheColumn == (3 - numberOfTheLine - 1):
-                possibilities['secondaryDiagonal'].append(matrixOfTheGame_[numberOfTheLine][numberOfTheColumn])
+                possibilities['secondaryDiagonal'].append(matrixOfTheGame[numberOfTheLine][numberOfTheColumn])
 
             if numberOfTheColumn == 0:
-                possibilities['columnZero'].append(matrixOfTheGame_[numberOfTheLine][numberOfTheColumn])
+                possibilities['columnZero'].append(matrixOfTheGame[numberOfTheLine][numberOfTheColumn])
 
             if numberOfTheColumn == 1:
-                possibilities['columnOne'].append(matrixOfTheGame_[numberOfTheLine][numberOfTheColumn])
+                possibilities['columnOne'].append(matrixOfTheGame[numberOfTheLine][numberOfTheColumn])
 
             if numberOfTheColumn == 2:
-                possibilities['columnTwo'].append(matrixOfTheGame_[numberOfTheLine][numberOfTheColumn])
+                possibilities['columnTwo'].append(matrixOfTheGame[numberOfTheLine][numberOfTheColumn])
             
     # Checar se tem alguma lista com simbolos iguais
     if possibilities['lineZero'].count('X') == 3 or possibilities['lineZero'].count('O') == 3:
@@ -123,12 +130,12 @@ def checkIfThereIsAWinner(matrixOfTheGame_):
 
 
 # testado
-def printWhichPlayerWonTheGame(matrixOfTheGame__):
+def printWhichPlayerWonTheGame(matrixOfTheGame):
     
     # não tem vencedor
-    if matrixOfTheGame__ == []:
+    if matrixOfTheGame == []:
         return ' '
-    elif matrixOfTheGame__.count('X') == 3: 
+    elif matrixOfTheGame.count('X') == 3: 
         return '\033[1;32mJogador 1 venceu !!! \033[0m'
     else:
         return '\033[1;32mJogador 2 venceu !!! \033[0m'
@@ -167,9 +174,9 @@ while mainUserInput != '3':
             print('\nJogador 1 = "X" ')
             print('Jogador 2 = "O" ')
 
-            userWantToContinue = 'S'
+            seeIfUserWantToContinue = 'S'
 
-            while userWantToContinue == 'S' or userWantToContinue == 's':
+            while seeIfUserWantToContinue == 'S' or seeIfUserWantToContinue == 's':
 
                 # É a vez do jogador 1
                 controlsWhichPlayerSTurnItIs = 1
@@ -198,13 +205,13 @@ while mainUserInput != '3':
                     break
 
                 # lidar melhor com a resposta do usuário depois
-                userWantToContinue = input('Deseja continuar jogando ou voltar ao menu principal ? (s) para sim e qualquer outra tecla para não: ')
+                seeIfUserWantToContinue = input('Deseja continuar jogando ou voltar ao menu principal ? (s) para sim e qualquer outra tecla para não: ')
         case '2':
             printRulesOfTheGame()
         case '3':
-            print('\nThank you for playing with us. See you next time.')
+            print('\nObrigado, até mais.')
         case _:
-            print('\nPlease, write a suitable input.')
+            print('\nOpção inválida, por favor, tente novamente.')
 
     cleanScreen()
 
