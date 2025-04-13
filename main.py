@@ -10,14 +10,14 @@ def printGame(matrixOfTheGame):
         for index_, item in enumerate(line):
             # consertar essa porqueira depois
             if index_ == 1:
-                print('| ', f'\033[1;37m{item}\033[0m', ' |', end='')
+                print(f'\033[1;36m|\033[0m ', f'\033[1;37m{item}\033[0m', f' \033[1;36m|\033[0m', end='')
             elif index_ == 2:
                 print(' ', f'\033[1;37m{item}\033[0m', end='')
             else:
                 print('  ', f'\033[1;37m{item}\033[0m', ' ', end='')
         
         if not index == 2:
-            print('\n', '_'*17, '\n')
+            print('\n', f'\033[1;36m_\033[0m'*17, '\n')
     print('\n')
 
 
@@ -32,12 +32,12 @@ def printInitialMenu():
 
 # testado
 def printRulesOfTheGame():
-    print('\nPara posicionar o icone na posição desejada no quadro, informe o indice da linha e da coluna de acordo com a posição na matriz que você deseja inserir o icone, veja a ilustração abaixo: \n')
+    print('\nPara posicionar o icone na posição desejada na matriz, informe o indice da linha e da coluna de acordo com a ilustração abaixo: \n')
     for line in range(0, 3):
         if line == 0:
-            print('    ', 0, ' '*3, '1', ' '*3, '2', '  \n')
+            print('    ', f'\033[1;35m0\033[0m', ' '*3, f'\033[1;35m1\033[0m', ' '*3, f'\033[1;35m2\033[0m', '  \n')
 
-        print(line, '  ', end='')
+        print(f'\033[1;33m{line}\033[0m', '  ', end='')
         for column in range(0, 3):
             
             if column == 1:
@@ -47,7 +47,13 @@ def printRulesOfTheGame():
         
         if not line == 2:
             print('\n  ', '_'*17, '\n')
-    print('\n')
+
+    print('\n\n\n\033[1;32mHAVERÁ UM \033[1;37mVENCEDOR\033[0m NOS SEGUINTES CASOS: \033[0m')
+    print('\033[1;32m- ICONES IGUAIS EM TODAS AS POSIÇÕES DE UMA LINHA\033[0m')
+    print('\033[1;32m- ICONES IGUAIS EM TODAS AS POSIÇÕES DE UMA COLUNA\033[0m')
+    print('\033[1;32m- ICONES IGUAIS NA DIAGONAL PRINCIPAL\033[0m')
+    print('\033[1;32m- ICONES IGUAIS NA DIAGONAL SECUNDÁRIA\033[0m')
+    print('\n\033[1;32mO JOGO TERMINARÁ \033[1;37mEMPATADO\033[0m CASO NENHUM DOS CASOS ACIMA ACONTECER E A MATRIZ NÃO ACEITAR MAIS ICONES\033[0m')
 
 
 # testado
@@ -78,7 +84,7 @@ def validateUsersInputPosition(matrixOfTheGame, line, column):
     return False
     
     
-# ainda precisa ser testada
+# testado
 def checkIfThereIsAWinner(matrixOfTheGame):
     possibilities = {
         'lineZero': deepcopy(matrixOfTheGame[0]),
@@ -136,22 +142,22 @@ def printWhichPlayerWonTheGame(matrixOfTheGame):
     if matrixOfTheGame == []:
         return ' '
     elif matrixOfTheGame.count('X') == 3: 
-        return '\033[1;32mJogador 1 venceu !!! \033[0m'
+        return '\033[1;32m      JOGADOR 1 VENCEU !!! \033[0m'
     else:
-        return '\033[1;32mJogador 2 venceu !!! \033[0m'
+        return '\033[1;32m      JOGADOR 2 VENCEU !!! \033[0m'
 
-# ainda precisa ser testado
+# testado
 def handleUsersTurn(matrixOfTheGame, whichPlayerSTurnIsIt, playerIcon):
     validPosition = False
 
     while not validPosition:
         print(f'\nÉ a vez do jogador {whichPlayerSTurnIsIt}, por favor digite uma posição válida')
-        userOneInputLine = input('Informe o indice da linha: ')
-        userOneInputColumn = input('Informe o indice da coluna: ')
+        userInputLine = input('Informe o indice da linha: ')
+        userInputColumn = input('Informe o indice da coluna: ')
 
-        validPosition = validateUsersInputPosition(matrixOfTheGame, userOneInputLine, userOneInputColumn)
+        validPosition = validateUsersInputPosition(matrixOfTheGame, userInputLine, userInputColumn)
 
-    matrixOfTheGame[int(userOneInputLine)][int(userOneInputColumn)] = playerIcon
+    matrixOfTheGame[int(userInputLine)][int(userInputColumn)] = playerIcon
     printGame(matrixOfTheGame)
 
 # testado
@@ -170,9 +176,10 @@ while mainUserInput != '3':
     match mainUserInput:
         case '1':
             matrixOfTheGame = [[' ', ' ', ' '], [' ', ' ', ' '], [' ', ' ', ' ']]
+            verifyIfTheGameTied = 0
 
-            print('\nJogador 1 = "X" ')
-            print('Jogador 2 = "O" ')
+            print('\n\033[1;32mJogador 1 = "X" \033[0m')
+            print('\033[1;32mJogador 2 = "O" \033[0m')
 
             seeIfUserWantToContinue = 'S'
 
@@ -185,12 +192,18 @@ while mainUserInput != '3':
                 possibleWinner = printWhichPlayerWonTheGame(checkIfThereIsAWinner(matrixOfTheGame))
                 print('\n', possibleWinner)
 
-                cleanScreen()
-
                 # Sai do loop caso tenha um vencedor
                 if possibleWinner != ' ':
                     break
                     
+                verifyIfTheGameTied += 1
+                
+                if verifyIfTheGameTied == 9:
+                    print('\033[1;32m     DEU VELHA !!! \033[0m')
+                    break
+                
+                cleanScreen()
+
                 # É a vez do jogador 2
                 controlsWhichPlayerSTurnItIs = 2
                 handleUsersTurn(matrixOfTheGame, controlsWhichPlayerSTurnItIs, 'O')
@@ -203,6 +216,8 @@ while mainUserInput != '3':
                 # Sai do loop caso tenha um vencedor
                 if possibleWinner != ' ':
                     break
+                
+                verifyIfTheGameTied += 1
 
                 # lidar melhor com a resposta do usuário depois
                 seeIfUserWantToContinue = input('Deseja continuar jogando ou voltar ao menu principal ? (s) para sim e qualquer outra tecla para não: ')
@@ -214,4 +229,3 @@ while mainUserInput != '3':
             print('\nOpção inválida, por favor, tente novamente.')
 
     cleanScreen()
-
