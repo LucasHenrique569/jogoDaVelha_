@@ -8,7 +8,6 @@ def printGame(matrixOfTheGame):
     print('\n')
     for index, line in enumerate(matrixOfTheGame):
         for index_, item in enumerate(line):
-            # consertar essa porqueira depois
             if index_ == 1:
                 print(f'\033[1;36m|\033[0m ', f'\033[1;37m{item}\033[0m', f' \033[1;36m|\033[0m', end='')
             elif index_ == 2:
@@ -32,7 +31,7 @@ def printInitialMenu():
 
 # testado
 def printRulesOfTheGame():
-    print('\nPara posicionar o icone na posição desejada na matriz, informe o indice da linha e da coluna de acordo com a ilustração abaixo: \n')
+    print('\n\033[1;32mPara posicionar o icone na posição desejada na matriz, informe o indice da linha e da coluna de acordo com a ilustração abaixo: \033[0m\n')
     for line in range(0, 3):
         if line == 0:
             print('    ', f'\033[1;35m0\033[0m', ' '*3, f'\033[1;35m1\033[0m', ' '*3, f'\033[1;35m2\033[0m', '  \n')
@@ -48,12 +47,12 @@ def printRulesOfTheGame():
         if not line == 2:
             print('\n  ', '_'*17, '\n')
 
-    print('\n\n\n\033[1;32mHAVERÁ UM \033[1;37mVENCEDOR\033[0m NOS SEGUINTES CASOS: \033[0m')
+    print('\n\n\n\033[1;32mHAVERÁ UM VENCEDOR NOS SEGUINTES CASOS: \033[0m')
     print('\033[1;32m- ICONES IGUAIS EM TODAS AS POSIÇÕES DE UMA LINHA\033[0m')
     print('\033[1;32m- ICONES IGUAIS EM TODAS AS POSIÇÕES DE UMA COLUNA\033[0m')
     print('\033[1;32m- ICONES IGUAIS NA DIAGONAL PRINCIPAL\033[0m')
     print('\033[1;32m- ICONES IGUAIS NA DIAGONAL SECUNDÁRIA\033[0m')
-    print('\n\033[1;32mO JOGO TERMINARÁ \033[1;37mEMPATADO\033[0m CASO NENHUM DOS CASOS ACIMA ACONTECER E A MATRIZ NÃO ACEITAR MAIS ICONES\033[0m')
+    print('\n\033[1;32mO JOGO TERMINARÁ EMPATADO CASO NENHUM DOS CASOS ACIMA ACONTECER E A MATRIZ NÃO ACEITAR MAIS ICONES\033[0m')
 
 
 # testado
@@ -96,7 +95,7 @@ def checkIfThereIsAWinner(matrixOfTheGame):
         'mainDiagonal': list(),
         'secondaryDiagonal': list(),
     }
-
+    
     for numberOfTheLine in range(0, 3):
         for numberOfTheColumn in range(0, 3):
             if numberOfTheLine == numberOfTheColumn:
@@ -114,7 +113,7 @@ def checkIfThereIsAWinner(matrixOfTheGame):
             if numberOfTheColumn == 2:
                 possibilities['columnTwo'].append(matrixOfTheGame[numberOfTheLine][numberOfTheColumn])
             
-    # Checar se tem alguma lista com simbolos iguais
+    # Checar se tem alguma lista com simbolos iguais, consequentemente checa se houve um vencedor
     if possibilities['lineZero'].count('X') == 3 or possibilities['lineZero'].count('O') == 3:
         return possibilities['lineZero']
     elif possibilities['lineOne'].count('X') == 3 or possibilities['lineOne'].count('O') == 3:
