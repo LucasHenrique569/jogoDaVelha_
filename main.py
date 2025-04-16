@@ -3,24 +3,22 @@ from os import system
 from copy import deepcopy
 from msvcrt import getch
 
-# testado
 def printGame(matrixOfTheGame):
     print('\n')
     for index, line in enumerate(matrixOfTheGame):
-        for index_, item in enumerate(line):
+        for index_, icon in enumerate(line):
             if index_ == 1:
-                print(f'\033[1;36m|\033[0m ', f'\033[1;37m{item}\033[0m', f' \033[1;36m|\033[0m', end='')
+                print(f'\033[1;36m|\033[0m ', f'\033[1;37m{icon}\033[0m', f' \033[1;36m|\033[0m', end='')
             elif index_ == 2:
-                print(' ', f'\033[1;37m{item}\033[0m', end='')
+                print(' ', f'\033[1;37m{icon}\033[0m', end='')
             else:
-                print('  ', f'\033[1;37m{item}\033[0m', ' ', end='')
+                print('  ', f'\033[1;37m{icon}\033[0m', ' ', end='')
         
         if not index == 2:
             print('\n', f'\033[1;36m_\033[0m'*17, '\n')
     print('\n')
 
 
-# testado
 def printInitialMenu():
     print('Olá, bem vindo ao jogo da velha !!! ')
     print('Menu de opções: ')
@@ -29,14 +27,15 @@ def printInitialMenu():
     print('     3: Sair\n')
 
 
-# testado
 def printRulesOfTheGame():
     print('\n\033[1;32mPara posicionar o icone na posição desejada na matriz, informe o indice da linha e da coluna de acordo com a ilustração abaixo: \033[0m\n')
+
     for line in range(0, 3):
         if line == 0:
             print('    ', f'\033[1;35m0\033[0m', ' '*3, f'\033[1;35m1\033[0m', ' '*3, f'\033[1;35m2\033[0m', '  \n')
 
         print(f'\033[1;33m{line}\033[0m', '  ', end='')
+
         for column in range(0, 3):
             
             if column == 1:
@@ -55,7 +54,6 @@ def printRulesOfTheGame():
     print('\n\033[1;32mO JOGO TERMINARÁ EMPATADO CASO NENHUM DOS CASOS ACIMA ACONTECER E A MATRIZ NÃO ACEITAR MAIS ICONES\033[0m')
 
 
-# testado
 def validateUsersInputPosition(matrixOfTheGame, line, column):
     convertedLine = line
     convertedColumn = column
@@ -83,8 +81,8 @@ def validateUsersInputPosition(matrixOfTheGame, line, column):
     return False
     
     
-# testado
 def checkIfThereIsAWinner(matrixOfTheGame):
+    # dicionario de possibilidades de ganhar o jogo 
     possibilities = {
         'lineZero': deepcopy(matrixOfTheGame[0]),
         'lineOne': deepcopy(matrixOfTheGame[1]),
@@ -96,6 +94,7 @@ def checkIfThereIsAWinner(matrixOfTheGame):
         'secondaryDiagonal': list(),
     }
     
+    # Armazena quais simbolos nós temos em cada possibilidade de vitória do jogo
     for numberOfTheLine in range(0, 3):
         for numberOfTheColumn in range(0, 3):
             if numberOfTheLine == numberOfTheColumn:
@@ -113,7 +112,7 @@ def checkIfThereIsAWinner(matrixOfTheGame):
             if numberOfTheColumn == 2:
                 possibilities['columnTwo'].append(matrixOfTheGame[numberOfTheLine][numberOfTheColumn])
             
-    # Checar se tem alguma lista com simbolos iguais, consequentemente checa se houve um vencedor
+    # Checar se tem alguma lista com 3 simbolos ou icones iguais, consequentemente checa se houve um vencedor
     if possibilities['lineZero'].count('X') == 3 or possibilities['lineZero'].count('O') == 3:
         return possibilities['lineZero']
     elif possibilities['lineOne'].count('X') == 3 or possibilities['lineOne'].count('O') == 3:
@@ -134,7 +133,6 @@ def checkIfThereIsAWinner(matrixOfTheGame):
         return []
 
 
-# testado
 def printWhichPlayerWonTheGame(matrixOfTheGame):
     
     # não tem vencedor
@@ -145,7 +143,7 @@ def printWhichPlayerWonTheGame(matrixOfTheGame):
     else:
         return '\033[1;32m      JOGADOR 2 VENCEU !!! \033[0m'
 
-# testado
+
 def handleUsersTurn(matrixOfTheGame, whichPlayerSTurnIsIt, playerIcon):
     validPosition = False
 
@@ -159,13 +157,14 @@ def handleUsersTurn(matrixOfTheGame, whichPlayerSTurnIsIt, playerIcon):
     matrixOfTheGame[int(userInputLine)][int(userInputColumn)] = playerIcon
     printGame(matrixOfTheGame)
 
-# testado
+
 def cleanScreen():
     print('\nPressione qualquer tecla para continuar ...')
     getch()
     system('cls')
 
 
+# variavel que armazena a opcao do usuario em relação ao menu principal
 mainUserInput = '0'
 
 while mainUserInput != '3':
@@ -218,7 +217,7 @@ while mainUserInput != '3':
                 
                 verifyIfTheGameTied += 1
 
-                # lidar melhor com a resposta do usuário depois
+                # Verifica se o usuário quer continuar jogando ou não
                 seeIfUserWantToContinue = input('Deseja continuar jogando ou voltar ao menu principal ? (s) para sim e qualquer outra tecla para não: ')
         case '2':
             printRulesOfTheGame()
